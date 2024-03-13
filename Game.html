@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tick Tack Teo</title>
+    <link rel="stylesheet" href="java1.css">
+</head>
+<body>
+    <div class="msgc hide">
+        <p class="msg "></p>
+        <button class="nbtn">New Game</button>
+    </div>
+    <main>
+        <h1>Tick Tack Teo</h1>
+        <div class="container">
+            <div class="game">
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+            </div>
+        </div>
+        <button class="rbtn">Reset button</button>
+    </main>
+    <script>
+        let boxes = document.querySelectorAll('.box');
+        let resetBtn = document.querySelector('.rbtn');
+        let msg = document.querySelector('.msg');
+        let msgContainer = document.querySelector('.msgc');
+        let newbtn = document.querySelector('.nbtn');
+
+        let turnO = true;
+        let count = 0;
+        const resrtGame = () =>{
+            turnO = true;
+            count = 0;
+            enableBoxes();
+            msgContainer.classList.add('hide');
+        };
+
+        const winPatterns = [
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
+            [1,4,7],
+            [2,5,8],
+            [2,4,6],
+            [3,4,5],
+            [6,7,8]
+          ];
+
+          boxes.forEach((box) =>{
+            box.addEventListener('click' , () => {
+                if (turnO) {
+                   box.innerText = 'o';
+                   turnO = false; 
+                   box.style.color = 'green';
+                } else{
+                    box.innerText = 'x';
+                   turnO = true; 
+                  box.style.color = 'red';
+                }
+                box.disabled = true;
+                count++;
+
+                let isWinner = checkWinners();
+                if (count === 9 && ! isWinner) {
+                    gameDraw();
+                }
+            });
+          });
+
+           const gameDraw = ()=>{
+            msg.innerText = 'Game was draw';
+            msgContainer.classList.remove('hide');
+            disableBoxes();
+           }
+
+          const disableBoxes = () =>{
+            for(let box of boxes){
+                box.disabled = true;
+            }
+          }
+          const enableBoxes = () =>{
+            for(let box of boxes){
+                box.disabled = false;
+                box.innerText = '';
+            }
+          }
+           const showWinner = (winner)=>{
+            msg.innerText = `Congratulations , Winner is ${winner}`
+            msgContainer.classList.remove('hide') ;
+            disableBoxes();
+           }
+
+
+         const checkWinners = () =>{
+            for ( let pettern of winPatterns){
+               let posVal1 = boxes[pettern[0]].innerText; 
+               let posVal2 = boxes[pettern[1]].innerText;
+               let posVal3 = boxes[pettern[2]].innerText; 
+               
+               if (posVal1 !='' && posVal2 !='' && posVal3 != '') {
+                if (posVal1 === posVal2 && posVal2 ===posVal3) {
+                    showWinner(posVal1);
+                    return true;
+                }
+               }
+            }
+         }
+         
+         newbtn.addEventListener('click' ,resrtGame);
+         resetBtn.addEventListener('click' ,resrtGame);
+    </script>
+</body>
+</html>
